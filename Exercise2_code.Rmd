@@ -1,0 +1,78 @@
+---
+title: "Exercise 2"
+author: "Paddy"
+date: "12 March 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data Wrangling - Exercise 1: Basic Data Manipulation
+In this exercise, you'll work with one of the most popular starter data sets in data science, the Titanic data set. This is a data set that records various attributes of passengers on the Titanic, including who survived and who didn’t.
+
+## Exerise 
+Using R, you’ll be handling missing values in this data set, and creating a new data set.
+
+```{r}
+library(readr)
+```
+
+### Problem 1
+**0: Load the data in RStudio**
+Save the data set as a CSV file called titanic_original.csv and load it in RStudio into a data frame.
+
+```{r}
+titanic3 <- read_csv("~/Springboard/Exercise problems/Exercise 2/titanic3.csv")
+library(tidyr)
+library(dplyr)
+```
+
+
+### Problem 2
+**1: Port of embarkation**
+The embarked column has some missing values, which are known to correspond to passengers who actually embarked at Southampton. Find the missing values and replace them with S. (Caution: Sometimes a missing value might be read into R as a blank or empty string.
+
+```{r}
+titanic <- titanic3 %>% mutate(embarked = replace(embarked, is.na(embarked), "S"))
+```
+
+
+### Problem 3
+**2: Age **
+You’ll notice that a lot of the values in the Age column are missing.
+Calculate the mean of the Age column and use that value to populate the missing values
+
+
+```{r}
+mean_age <- mean (titanic$age, na.rm = TRUE)
+titanic <- titanic %>% mutate(age = replace(age, is.na(age), mean_age))
+```
+
+
+### Problem 4
+**3:Lifeboat**
+You’re interested in looking at the distribution of passengers in different lifeboats, but as we know, many passengers did not make it to a boat :-( This means that there are a lot of missing values in the boat column. Fill these empty slots with a dummy value e.g. the string 'None' or 'NA'
+
+```{r}
+ titanic <- titanic %>% mutate(boat = replace(boat, is.na(boat), "None"))
+```
+
+
+###Problem 5
+**4:Cabin**
+You notice that many passengers don’t have a cabin number associated with them.
+Does it make sense to fill missing cabin numbers with a value?
+What does a missing value here mean?
+You have a hunch that the fact that the cabin number is missing might be a useful indicator of survival. Create a new column has_cabin_number which has 1 if there is a cabin number, and 0 otherwise.
+
+```{r}
+titanic <- titanic %>% mutate(cabin = replace(cabin, is.na(cabin), "NA"))
+titanic <- titanic %>% mutate(has_cabin_number = ifelse(cabin == "NA", 0, 1))
+```
+Thank you.....
+Finish by saving the ammended file to "titanic_refined.csv"
+
+```{r}
+write.csv(titanic, file = "titanic_refined.csv")
